@@ -209,6 +209,44 @@ def draw_masks(masks, real_nodes, im_size=256):
             _draw_polygon(dwg, [contour], color, with_stroke=False)
     return dwg.tostring()
 
+# def draw_masks_png(masks, real_nodes, im_size=256):
+#     # Create a blank white image
+#     img = Image.new('RGB', (im_size, im_size), color=(255, 255, 255))
+#     draw = ImageDraw.Draw(img)
+
+#     # Process polygons
+#     polygons = []
+#     for m, nd in zip(masks, real_nodes):
+#         # Resize map
+#         m[m > 0] = 255
+#         m[m < 0] = 0
+#         m_lg = cv2.resize(m, (im_size, im_size), interpolation=cv2.INTER_NEAREST)
+
+#         # Extract contour
+#         m_cv = m_lg[:, :, np.newaxis].astype('uint8')
+#         ret, thresh = cv2.threshold(m_cv, 127, 255, 0)
+#         contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+#         contours = [c for c in contours if len(c) > 0]
+#         polygons.append(contours)
+#     polygons = _snap(polygons)
+
+#     # Draw room polygons on the image
+#     for nd, contours in zip(real_nodes, polygons):
+#         # Pick color
+#         color = ID_COLOR[nd]
+#         r, g, b = webcolors.hex_to_rgb(color)
+
+#         if nd not in [15, 17]:  # Assuming these are not to be drawn
+#             new_contours = _fix(contours)
+#             new_contours = [c for c in new_contours if cv2.contourArea(c) >= 4]  # Filter out small contours
+
+#             for contour in new_contours:
+#                 # Convert contour to a format that ImageDraw can understand
+#                 contour_points = [(point[0][0], point[0][1]) for point in contour]
+#                 draw.polygon(contour_points, outline=(r, g, b), fill=(r, g, b))
+
+#     return img
+
 def draw_masks_png(masks, real_nodes, im_size=256):
     # Create a blank white image
     img = Image.new('RGB', (im_size, im_size), color=(255, 255, 255))
@@ -231,16 +269,31 @@ def draw_masks_png(masks, real_nodes, im_size=256):
     polygons = _snap(polygons)
 
     # Draw room polygons on the image
+    rooms = []
     for nd, contours in zip(real_nodes, polygons):
         # Pick color
         color = ID_COLOR[nd]
         r, g, b = webcolors.hex_to_rgb(color)
 
-        if nd not in [15, 17]:  # Assuming these are not to be drawn
+        if nd not in [15, 17]:  # Assuming these are not to be drawn as rooms
             new_contours = _fix(contours)
             new_contours = [c for c in new_contours if cv2.contourArea(c) >= 4]  # Filter out small contours
+            rooms.append(new_contours)
 
             for contour in new_contours:
+                # Convert contour to a format that ImageDraw can understand
+                contour_points = [(point[0][0], point[0][1]) for point in contour]
+                draw.polygon(contour_points, outline=(r, g, b), fill=(r, g, b))
+
+    # Draw doors
+    for nd, contours in zip(real_nodes, polygons):
+        # Pick color
+        color = ID_COLOR[nd]
+        r, g, b = webcolors.hex_to_rgb(color)
+
+        if nd in [15, 17]:  # Assuming these represent doors
+            if len(contours) > 0:
+                contour = _assign_door([contours[0]], rooms)  # Assign the door to the closest room
                 # Convert contour to a format that ImageDraw can understand
                 contour_points = [(point[0][0], point[0][1]) for point in contour]
                 draw.polygon(contour_points, outline=(r, g, b), fill=(r, g, b))
