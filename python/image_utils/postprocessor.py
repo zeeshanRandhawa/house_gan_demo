@@ -81,7 +81,7 @@ class PostProcessor:
         img.putalpha(img.split()[-1].point(lambda p: p * transparency)) #for translucent
 
         # img = self._crop_to_content(img)
-        img = self._pil_image_to_tensor(img)
+        # img = self._pil_image_to_tensor(img)
 
         return img
     
