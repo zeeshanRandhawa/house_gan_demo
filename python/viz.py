@@ -246,7 +246,17 @@ def draw_masks(masks, real_nodes, im_size=256):
 #                 draw.polygon(contour_points, outline=(r, g, b), fill=(r, g, b))
 
 #     return img
-
+def _draw_polygon_png(draw, contours, color, with_stroke=True):
+    for contour in contours:
+        # Convert contour to a format that ImageDraw can understand
+        pts = [(float(point[0][0]), float(point[0][1])) for point in contour]
+        
+        if with_stroke:
+            # Draw the polygon with a black stroke and the specified fill color
+            draw.polygon(pts, outline='black', fill=color)
+        else:
+            # Draw the polygon without stroke
+            draw.polygon(pts, outline=color, fill=color)
 def draw_masks_png(masks, real_nodes, im_size=256):
     # Create a blank white image
     img = Image.new('RGB', (im_size, im_size), color=(255, 255, 255))
@@ -280,10 +290,8 @@ def draw_masks_png(masks, real_nodes, im_size=256):
             new_contours = [c for c in new_contours if cv2.contourArea(c) >= 4]  # Filter out small contours
             rooms.append(new_contours)
 
-            for contour in new_contours:
-                # Convert contour to a format that ImageDraw can understand
-                contour_points = [(point[0][0], point[0][1]) for point in contour]
-                draw.polygon(contour_points, outline=(r, g, b), fill=(r, g, b))
+            # Draw the room polygons with stroke
+            _draw_polygon_png(draw, new_contours, (r, g, b), with_stroke=True)
 
     # Draw doors
     for nd, contours in zip(real_nodes, polygons):
@@ -294,11 +302,12 @@ def draw_masks_png(masks, real_nodes, im_size=256):
         if nd in [15, 17]:  # Assuming these represent doors
             if len(contours) > 0:
                 contour = _assign_door([contours[0]], rooms)  # Assign the door to the closest room
-                # Convert contour to a format that ImageDraw can understand
-                contour_points = [(point[0][0], point[0][1]) for point in contour]
-                draw.polygon(contour_points, outline=(r, g, b), fill=(r, g, b))
+
+                # Draw the door polygons without stroke
+                _draw_polygon_png(draw, [contour], (r, g, b), with_stroke=False)
 
     return img
+
 
 ## OLD CODE -- BACKUP
 # def draw_masks(masks, real_nodes, im_size=256):
