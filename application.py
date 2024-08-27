@@ -145,7 +145,7 @@ def generate():
 	# graph_str = request.data.decode('utf-8')
 	graph_data = {'nodes': {'0': 'bedroom', '1': 'bedroom', '2': 'bathroom', '3': 'bathroom', '4': 'living', '5': 'outside', '6': 'balcony'}, 'edges': [['0', '4'], ['0', '2'], ['0', '3'], ['1', '4'], ['1', '2'], ['1', '3'], ['2', '4'], ['2', '0'], ['2', '1'], ['3', '4'], ['3', '0'], ['3', '1'], ['5', '4'], ['6', '4']]}
 	# graph_data = json.loads(graph_str)
-	run_model_img(graph_data)
+	run_model_img(graph_data,"123")
 	return "gigi"
 
 
