@@ -184,7 +184,7 @@ def run_model_img(graph_data):
     real_nodes = fp_graph[0]
     all_types = sorted(list(set(real_nodes)))
     selected_types = [all_types[:k+1] for k in range(50)]
-
+	
     # Ensure the directory exists
     output_dir = os.path.join(os.getcwd(), 'public')
     if not os.path.exists(output_dir):
@@ -228,6 +228,7 @@ def run_model_img(graph_data):
         imk = postprocessor.remove_white_background(im_png)
         imk_after = postprocessor.remove_white_background_after(imk)
         img_name = f'v{k+1}.png'
+		print(img_name)
         img_path = os.path.join(output_dir, img_name)
         imk_after.save(img_path)
 
