@@ -1,6 +1,5 @@
 import numpy as np
-from python.viz import draw_graph, draw_masks
-import matplotlib.pyplot as plt
+from python.viz import draw_graph, draw_masks,draw_masks_png
 import torch
 from python.models_new import Generator
 from PIL import Image
@@ -224,34 +223,10 @@ def run_model_img(graph_data):
 		print("Search score {}".format(_tracker[0]))
 
         # send masks
-		im_png = draw_masks_png_img(masks.copy(), real_nodes, im_size=256)
+		im_png = draw_masks_png(masks.copy(), real_nodes, im_size=256)
 		imk = postprocessor.remove_white_background(im_png)
 		imk_after = postprocessor.remove_white_background_after(imk)
 		img_name = f'v{k+1}.png'
 		img_path = os.path.join(output_dir, img_name)
 		imk_after.save(img_path)
 
-def draw_masks_png(masks, real_nodes, im_size):
-    img = Image.new('RGB', (im_size, im_size), color=(255, 255, 255))
-    draw = ImageDraw.Draw(img)
-
-    # Example drawing logic (you'll need to implement the actual logic based on masks and real_nodes)
-    for mask in masks:
-        # Assuming `mask` contains the coordinates and size of each element to draw
-        # You will need to replace this with actual logic
-        x, y, size = mask  # Example
-        draw.rectangle([x, y, x + size, y + size], fill=(0, 0, 0))
-
-    return img
-def draw_masks_png_img(masks, real_nodes, im_size):
-    img = Image.new('RGB', (im_size, im_size), color=(255, 255, 255))
-    draw = ImageDraw.Draw(img)
-
-    # Example drawing logic (you'll need to implement the actual logic based on masks and real_nodes)
-    for mask in masks:
-        # Assuming `mask` contains the coordinates and size of each element to draw
-        # You will need to replace this with actual logic
-        x, y, size = mask  # Example
-        draw.rectangle([x, y, x + size, y + size], fill=(0, 0, 0))
-
-    return img
