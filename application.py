@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 application = app = Flask(__name__)
 CORS(app)
 
-public_dir = os.path.join(os.getcwd(), 'python', 'public')
+public_dir = os.path.join(os.getcwd(),'public')
 
 def image_to_data_uri(image_path):
     with open(image_path, 'rb') as image_file:
