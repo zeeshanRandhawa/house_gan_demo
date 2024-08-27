@@ -111,12 +111,39 @@ def create_session_folder(session_id):
     #     shutil.rmtree(session_folder_path)
 
     return jsonify(images_data_uri)
+# {"nodes":{"0":"bedroom","1":"bedroom","2":"bathroom","3":"bathroom","4":"balcony","5":"living","6":"outside"},"edges":[[2,0],[3,1],[5,0],[5,1],[5,3],[5,4],[6,5]]}
 
+
+@app.route('/generate_floorplans_test/', methods=['POST'])
+def create_session_folder():
+    session_id= request.data.session_id
+    graph_str = request.data.graph_str.decode('utf-8')
+    
+    run_model_img(graph_str, session_id)
+    
+    session_folder_path = os.path.join(public_dir, session_id)
+    image_files = ['V1.png', 'V2.png', 'V3.png', 'V4.png']
+    
+    if not os.path.exists(session_folder_path):
+        os.makedirs(session_folder_path)
+    # main(session_folder_path)
+    
+    images_data_uri = {}
+    for image_file in image_files:
+        image_path = os.path.join(session_folder_path, image_file)
+        if os.path.exists(image_path):
+            images_data_uri[image_file.replace(".png","")] = {"dataUri":image_to_data_uri(image_path), "text": "1 BR | 1 BA"}
+            # images_data_uri[image_file.replace(".png","")] = image_to_data_uri(image_path)
+        else:
+            images_data_uri[image_file.replace(".png","")] = None
+
+    return jsonify(images_data_uri)
 
 @app.route('/generate', methods=['POST'])
 def generate():
 	# receive post
-	graph_str = request.data.decode('utf-8')
+	# graph_str = request.data.decode('utf-8')
+	graph_str = {'nodes': {'0': 'bedroom', '1': 'bedroom', '2': 'bathroom', '3': 'bathroom', '4': 'living', '5': 'outside', '6': 'balcony'}, 'edges': [['0', '4'], ['0', '2'], ['0', '3'], ['1', '4'], ['1', '2'], ['1', '3'], ['2', '4'], ['2', '0'], ['2', '1'], ['3', '4'], ['3', '0'], ['3', '1'], ['5', '4'], ['6', '4']]}
 	graph_data = json.loads(graph_str)
 	run_model_img(graph_data)
 	return "gigi"

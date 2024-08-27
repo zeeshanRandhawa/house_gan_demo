@@ -160,7 +160,7 @@ def run_model(graph_data):
 from PIL import Image, ImageDraw
 import os
 
-def run_model_img(graph_data):
+def run_model_img(graph_data, session_id):
 	# parse json
 	fp_graph = parse_json(graph_data)
 	G_gt = get_nxgraph(fp_graph)
@@ -230,8 +230,8 @@ def run_model_img(graph_data):
 		imk_after = postprocessor.remove_white_background_after(imk)
 
 		# Save the final image
-		img_name = f'v{k+1}.png'
-		img_path = os.path.join(output_dir, img_name)
+		img_name = f'V{k+1}.png'
+		img_path = os.path.join(output_dir,session_id, img_name)
 		print(img_path)
 		imk_after_pil = postprocessor._tensor_to_pil_image(imk_after)
 		imk_after_pil.save(img_path)
