@@ -10,7 +10,8 @@ import json
 import sys
 import time
 from python.utils import fix_nodes, check_validity, get_nxgraph, get_mistakes, remove_multiple_components
-
+from image_utils import postprocessor
+postprocessor = postprocessor.PostProcessor()
 # enable cuDNN auto-tuner
 torch.backends.cudnn.benchmark = True
 
@@ -156,3 +157,89 @@ def run_model(graph_data):
 		# send masks
 		im_svg = draw_masks(masks.copy(), real_nodes, im_size=256)
 		yield '<stop>' + str(im_svg)
+
+from PIL import Image, ImageDraw
+import os
+
+def run_model_img(graph_data):
+    # parse json
+    fp_graph = parse_json(graph_data)
+    G_gt = get_nxgraph(fp_graph)
+
+    # block malicious requests
+    if len(fp_graph[0]) > 400 or len(fp_graph[1]) > 1200:  # set max of 20 fully connected rooms
+        return "Err"
+
+    # create image
+    all_images = []
+
+    # run inference
+    start_time = time.time()
+    device = torch.cuda.current_device() if torch.cuda.is_available() else 'cpu'
+    model = load_model().to(device)
+    model.zero_grad(set_to_none=True)
+
+    print("load model: --- %s seconds ---" % (time.time() - start_time))
+    # add room types incrementally
+    real_nodes = fp_graph[0]
+    all_types = sorted(list(set(real_nodes)))
+    selected_types = [all_types[:k+1] for k in range(50)]
+
+    # Ensure the directory exists
+    output_dir = os.path.join(os.getcwd(), 'public')
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    for k in range(4):
+        state = {'masks': None, 'fixed_nodes': []}
+        masks = _infer(fp_graph, model, state, device)
+        _tracker = (get_mistakes(masks.copy(), real_nodes, G_gt), masks)
+        for l, _types in enumerate(selected_types):
+            # refinement step
+            start_time = time.time()
+            _fixed_nds = np.concatenate([np.where(real_nodes == _t)[0] for _t in _types]) if len(_types) > 0 else np.array([])
+            state = {'masks': masks, 'fixed_nodes': _fixed_nds}
+            masks = _infer(fp_graph, model, state, device)
+
+            # track score
+            score = get_mistakes(masks.copy(), real_nodes, G_gt)
+            if score <= _tracker[0]:
+                _tracker = (score, masks.copy())
+
+            # reset layout
+            if l % 5 == 0 and l > 0:
+                state = {'masks': None, 'fixed_nodes': []}
+                masks = _infer(fp_graph, model, state, device)
+
+            # greed search -- found best solution
+            if _tracker[0] == 0:
+                break
+
+        # if last round send the best one
+        masks = _tracker[1]
+        masks, _ = remove_multiple_components(masks)
+
+        print("runtime: --- %s seconds ---" % (time.time() - start_time))
+        print("Using GPU:", torch.cuda.is_available(), "CUDNN Version:", torch.backends.cudnn.version())
+        print("Search score {}".format(_tracker[0]))
+
+        # send masks
+        im_png = draw_masks_png(masks.copy(), real_nodes, im_size=256)
+        imk = postprocessor.remove_white_background(im_png)
+        imk_after = postprocessor.remove_white_background_after(imk)
+        img_name = f'v{k+1}.png'
+        img_path = os.path.join(output_dir, img_name)
+        imk_after.save(img_path)
+
+def draw_masks_png(masks, real_nodes, im_size):
+    img = Image.new('RGB', (im_size, im_size), color=(255, 255, 255))
+    draw = ImageDraw.Draw(img)
+
+    # Example drawing logic (you'll need to implement the actual logic based on masks and real_nodes)
+    for mask in masks:
+        # Assuming `mask` contains the coordinates and size of each element to draw
+        # You will need to replace this with actual logic
+        x, y, size = mask  # Example
+        draw.rectangle([x, y, x + size, y + size], fill=(0, 0, 0))
+
+    return img
