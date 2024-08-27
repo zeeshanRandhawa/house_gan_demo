@@ -144,7 +144,7 @@ def generate():
 	# receive post
 	graph_str = request.data.decode('utf-8')
 	print(graph_str)
-	graph_data = {'nodes': {'0': 'bedroom', '1': 'bedroom', '2': 'bathroom', '3': 'bathroom', '4': 'living', '5': 'outside', '6': 'balcony'}, 'edges': [['0', '4'], ['0', '2'], ['0', '3'], ['1', '4'], ['1', '2'], ['1', '3'], ['2', '4'], ['2', '0'], ['2', '1'], ['3', '4'], ['3', '0'], ['3', '1'], ['5', '4'], ['6', '4']]}
+	graph_data = {'nodes': {'0': 'bedroom', '1': 'bedroom', '2': 'bathroom', '3': 'bathroom', '4': 'kitchen', '5': 'living', '6': 'outside', '7': 'balcony'}, 'edges': [[0, 5], [0, 2], [0, 3], [1, 5], [1, 2], [1, 3], [2, 5], [2, 0], [2, 1], [3, 5], [3, 0], [3, 1], [4, 5], [6, 5], [7, 5]]}
 	# graph_data = json.loads(graph_str)
 	print("/n")
 	print(graph_data)
