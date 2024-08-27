@@ -25,7 +25,8 @@ def image_to_data_uri(image_path):
 
 @app.route('/public/<path:filename>')
 def serve_public_file(filename):
-    return send_from_directory('public_dir', filename)
+    return send_from_directory(public_dir, filename)
+
 def datauri_to_image(datauri):
     # Extract the base64 part of the data URI
     image_data = re.sub("^data:image/.+;base64,", "", datauri)
