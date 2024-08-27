@@ -314,7 +314,7 @@ function generate() {
   }
 
   // xhr.open("POST", 'http://localhost:5000/generate', true);
-  xhr.open("POST", 'http://houseganpp.com/generate', true);
+  xhr.open("POST", 'https://coceno1tg65an9-3200.proxy.runpod.net/generate', true);
   xhr.setRequestHeader('Content-Type', 'text/plain');
   xhr.send(JSON.stringify(graph_info));
 }
