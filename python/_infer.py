@@ -234,4 +234,4 @@ def run_model_img(graph_data):
 		img_path = os.path.join(output_dir, img_name)
 		print(img_path)
 		imk_after_pil = postprocessor._tensor_to_pil_image(imk_after)
-		imk_after_pil.save(img_path)
+		im_png.save(img_path)
