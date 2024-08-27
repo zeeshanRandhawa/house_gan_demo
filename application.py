@@ -74,7 +74,26 @@ def superimpose_image_to_datauri(image1_datauri, image2_path, x, y, scale_width,
     #     f.write(data_uri)
     return data_uri
 
+def combination_selector(selection):
+    # Define graph data for each valid combination
+    graph_data_map = {
+        "1BR|1BA": {"nodes":{"0":"bedroom","1":"bathroom","2":"living","3":"outside"},"edges":[[1,0],[2,0],[2,1],[3,2]]},
+        "2BR|1BA": {"nodes":{"0":"bedroom","1":"bedroom","2":"bathroom","3":"living","4":"outside"},"edges":[[2,0],[3,0],[3,1],[4,3]]},
+        "2BR|2BA": {"nodes":{"0":"bedroom","1":"bedroom","2":"bathroom","3":"bathroom","4":"living","5":"outside"},"edges":[[2,0],[3,1],[4,0],[4,1],[4,3],[5,4]]},
+        "3BR|2BA": {"nodes":{"0":"bedroom","1":"bedroom","2":"bedroom","3":"bathroom","4":"bathroom","5":"living","6":"outside"},"edges":[[4,2],[5,0],[5,1],[5,2],[5,3],[6,5]]}
+    }
 
+    # Add graph data for combinations with a kitchen
+    # if()
+    # for key in list(graph_data_map.keys()):
+    #     graph_data_map[f"{key}|1K"] = graph_data_map[key]
+    
+    # Return the graph data based on the selection
+    if selection in graph_data_map:
+        return graph_data_map[selection]
+    else:
+        return "Invalid selection"
+    
 @app.route('/')
 def home():
 	return render_template('index.html')
@@ -144,7 +163,7 @@ def generate():
 	# receive post
 	graph_str = request.data.decode('utf-8')
 	print(graph_str)
-	graph_data = {'nodes': {'0': 'bedroom', '1': 'bedroom', '2': 'bathroom', '3': 'bathroom', '4': 'kitchen', '5': 'living', '6': 'outside', '7': 'balcony'}, 'edges': [[2, 0], [2, 1], [0, 3], [3, 1], [1, 5], [3, 0], [6, 5], [1, 3], [7, 5]]}
+	graph_data = combination_selector("1BR|1BA")
 	# graph_data = json.loads(graph_str)
 	print("/n")
 	print(graph_data)
