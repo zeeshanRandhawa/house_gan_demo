@@ -222,11 +222,15 @@ def run_model_img(graph_data):
 		print("Using GPU:", torch.cuda.is_available(), "CUDNN Version:", torch.backends.cudnn.version())
 		print("Search score {}".format(_tracker[0]))
 
-        # send masks
+		# Create PNG image
 		im_png = draw_masks_png(masks.copy(), real_nodes, im_size=256)
+
+		# Post-processing
 		imk = postprocessor.remove_white_background(im_png)
 		imk_after = postprocessor.remove_white_background_after(imk)
+
+		# Save the final image
 		img_name = f'v{k+1}.png'
 		img_path = os.path.join(output_dir, img_name)
-		imk_after.save(img_path)
-
+		imk_after_pil = postprocessor._tensor_to_pil_image(imk_after)
+		imk_after_pil.save(img_path)
