@@ -77,7 +77,7 @@ def superimpose_image_to_datauri(image1_datauri, image2_path, x, y, scale_width,
 def combination_selector(selection):
     # Define graph data for each valid combination
     graph_data_map = {
-        "1BR|1BA": {"nodes":{"0":"bedroom","1":"bathroom","2":"living","3":"outside"},"edges":[[1,0],[2,0],[2,1],[3,2]]},
+        "1BR|1BA": {"nodes":{"0":"bedroom","1":"bathroom","2":"living","3":"outside","13":"kitchen"},"edges":[[1,0],[2,0],[2,1],[3,2],[4,2]]},
         "2BR|1BA": {"nodes":{"0":"bedroom","1":"bedroom","2":"bathroom","3":"living","4":"outside"},"edges":[[2,0],[3,0],[3,1],[4,3]]},
         "2BR|2BA": {"nodes":{"0":"bedroom","1":"bedroom","2":"bathroom","3":"bathroom","4":"living","5":"outside"},"edges":[[2,0],[3,1],[4,0],[4,1],[4,3],[5,4]]},
         "3BR|2BA": {"nodes":{"0":"bedroom","1":"bedroom","2":"bedroom","3":"bathroom","4":"bathroom","5":"living","6":"outside"},"edges":[[4,2],[5,0],[5,1],[5,2],[5,3],[6,5]]}
