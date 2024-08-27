@@ -10,7 +10,7 @@ import json
 import sys
 import time
 from python.utils import fix_nodes, check_validity, get_nxgraph, get_mistakes, remove_multiple_components
-from image_utils import postprocessor
+from python.image_utils import postprocessor
 postprocessor = postprocessor.PostProcessor()
 # enable cuDNN auto-tuner
 torch.backends.cudnn.benchmark = True
