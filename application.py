@@ -143,8 +143,8 @@ def create_session_folder_test():
 def generate():
 	# receive post
 	# graph_str = request.data.decode('utf-8')
-	graph_str = {'nodes': {'0': 'bedroom', '1': 'bedroom', '2': 'bathroom', '3': 'bathroom', '4': 'living', '5': 'outside', '6': 'balcony'}, 'edges': [['0', '4'], ['0', '2'], ['0', '3'], ['1', '4'], ['1', '2'], ['1', '3'], ['2', '4'], ['2', '0'], ['2', '1'], ['3', '4'], ['3', '0'], ['3', '1'], ['5', '4'], ['6', '4']]}
-	graph_data = json.loads(graph_str)
+	graph_data = {'nodes': {'0': 'bedroom', '1': 'bedroom', '2': 'bathroom', '3': 'bathroom', '4': 'living', '5': 'outside', '6': 'balcony'}, 'edges': [['0', '4'], ['0', '2'], ['0', '3'], ['1', '4'], ['1', '2'], ['1', '3'], ['2', '4'], ['2', '0'], ['2', '1'], ['3', '4'], ['3', '0'], ['3', '1'], ['5', '4'], ['6', '4']]}
+	# graph_data = json.loads(graph_str)
 	run_model_img(graph_data)
 	return "gigi"
 
