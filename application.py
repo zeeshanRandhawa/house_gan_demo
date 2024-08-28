@@ -126,7 +126,7 @@ def create_session_folder(session_id):
 # {"nodes":{"0":"bedroom","1":"bedroom","2":"bathroom","3":"bathroom","4":"balcony","5":"living","6":"outside"},"edges":[[2,0],[3,1],[5,0],[5,1],[5,3],[5,4],[6,5]]}
 
 
-@app.route('/generate_floorplans_test/', methods=['POST'])
+@app.route('/generate_floorplans_test', methods=['POST'])
 def create_session_folder_test():
     session_id= request.data.session_id
     # graph_str = request.data.graph_str.decode('utf-8')
