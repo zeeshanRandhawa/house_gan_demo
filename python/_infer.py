@@ -227,7 +227,7 @@ def run_model_img(graph_data, session_id):
 
 		# Post-processing
 		imk = postprocessor.remove_white_background(im_png)
-		imk_after = postprocessor.remove_white_background_after(imk)
+		# imk_after = postprocessor.remove_white_background_after(imk)
 
 		# Save the final image
 		img_name = f'V{k+1}.png'
@@ -236,5 +236,5 @@ def run_model_img(graph_data, session_id):
 			os.makedirs(session_folder_path)
 		img_path = os.path.join(session_folder_path,  img_name)
 		print(img_path)
-		imk_after_pil = postprocessor._tensor_to_pil_image(imk_after)
-		imk_after_pil.save(img_path)
+		imk = postprocessor._tensor_to_pil_image(imk)
+		imk.save(img_path)

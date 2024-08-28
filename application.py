@@ -155,6 +155,28 @@ def create_session_folder_test():
 
     return jsonify(images_data_uri)
 
+@app.route('/use_floorplan', methods=['POST'])
+def use_session_folder():
+
+    data = request.get_json()
+    session_id = data.get('session_id')
+    selected_version = data.get('version')
+
+    x = data.get("x")
+    y = data.get("y")
+
+    scale_width = data.get("scale_width")
+    image1 = data.get("map_image")
+
+    displayed_width = data.get("displayed_width")
+    displayed_height = data.get("displayed_height")
+
+    session_folder_path = os.path.join(public_dir, session_id)
+    image2_path = os.path.join(session_folder_path, selected_version+".png")
+    imposed_darauri = superimpose_image_to_datauri(image1, image2_path, x, y, scale_width, displayed_width, displayed_height)
+
+    return jsonify(imposed_darauri)
+
 @app.route('/generate', methods=['POST'])
 def generate():
 	# receive post
