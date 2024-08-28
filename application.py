@@ -82,13 +82,6 @@ def combination_selector(selection):
         "2BR|2BA": {"nodes":{"0":"bedroom","1":"bedroom","2":"bathroom","3":"bathroom","4":"living","5":"outside"},"edges":[[2,0],[3,1],[4,0],[4,1],[4,3],[5,4]]},
         "3BR|2BA": {"nodes":{"0":"bedroom","1":"bedroom","2":"bedroom","3":"bathroom","4":"bathroom","5":"living","6":"outside"},"edges":[[4,2],[5,0],[5,1],[5,2],[5,3],[6,5]]}
     }
-
-    # Add graph data for combinations with a kitchen
-    # if()
-    # for key in list(graph_data_map.keys()):
-    #     graph_data_map[f"{key}|1K"] = graph_data_map[key]
-    
-    # Return the graph data based on the selection
     if selection in graph_data_map:
         return graph_data_map[selection]
     else:
@@ -136,9 +129,10 @@ def create_session_folder(session_id):
 @app.route('/generate_floorplans_test/', methods=['POST'])
 def create_session_folder_test():
     session_id= request.data.session_id
-    graph_str = request.data.graph_str.decode('utf-8')
-    
-    run_model_img(graph_str, session_id)
+    # graph_str = request.data.graph_str.decode('utf-8')
+    room_configuration = request.data.config
+        
+    run_model_img(combination_selector(room_configuration), session_id)
     
     session_folder_path = os.path.join(public_dir, session_id)
     image_files = ['V1.png', 'V2.png', 'V3.png', 'V4.png']
@@ -151,7 +145,7 @@ def create_session_folder_test():
     for image_file in image_files:
         image_path = os.path.join(session_folder_path, image_file)
         if os.path.exists(image_path):
-            images_data_uri[image_file.replace(".png","")] = {"dataUri":image_to_data_uri(image_path), "text": "1 BR | 1 BA"}
+            images_data_uri[image_file.replace(".png","")] = {"dataUri":image_to_data_uri(image_path), "text": room_configuration}
             # images_data_uri[image_file.replace(".png","")] = image_to_data_uri(image_path)
         else:
             images_data_uri[image_file.replace(".png","")] = None
