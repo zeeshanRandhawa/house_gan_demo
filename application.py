@@ -83,7 +83,7 @@ def combination_selector(selection):
         "3BR|2BA": {"nodes":{"0":"bedroom","1":"bedroom","2":"bedroom","3":"bathroom","4":"bathroom","5":"living","6":"outside"},"edges":[[4,2],[5,0],[5,1],[5,2],[5,3],[6,5]]}
     }
     if selection in graph_data_map:
-        print(graph_data_map[selection])
+        
         return graph_data_map[selection]
     else:
         return "Invalid selection"
@@ -132,7 +132,7 @@ def create_session_folder_test():
     print(request)
     data = request.get_json()  # Parse the JSON data from the request
     print(data)
-    session_id = data['session_id']
+    session_id = str(data['session_id'])
     room_configuration = data['config']
         
     run_model_img(combination_selector(room_configuration), session_id)
