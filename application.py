@@ -128,6 +128,7 @@ def create_session_folder(session_id):
 
 @app.route('/generate_floorplans_test', methods=['POST'])
 def create_session_folder_test():
+    print(request)
     session_id= request.data.session_id
     # graph_str = request.data.graph_str.decode('utf-8')
     room_configuration = request.data.config
