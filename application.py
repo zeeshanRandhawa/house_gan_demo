@@ -132,12 +132,12 @@ def create_session_folder_test():
     print(request)
     data = request.get_json()  # Parse the JSON data from the request
     print(data)
-    session_id = str(data['session_id'])
+    sessionId = str(data['sessionId'])
     room_configuration = data['config']
         
-    run_model_img(combination_selector(room_configuration), session_id)
+    run_model_img(combination_selector(room_configuration), sessionId)
     
-    session_folder_path = os.path.join(public_dir, session_id)
+    session_folder_path = os.path.join(public_dir, sessionId)
     image_files = ['V1.png', 'V2.png', 'V3.png', 'V4.png']
     
     if not os.path.exists(session_folder_path):
