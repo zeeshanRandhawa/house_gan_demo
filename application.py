@@ -130,6 +130,7 @@ def create_session_folder(session_id):
 def create_session_folder_test():
     print(request)
     data = request.get_json()  # Parse the JSON data from the request
+    print(data)
     session_id = data['session_id']
     room_configuration = data['config']
         
