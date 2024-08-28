@@ -129,9 +129,9 @@ def create_session_folder(session_id):
 @app.route('/generate_floorplans_test', methods=['POST'])
 def create_session_folder_test():
     print(request)
-    session_id= request.data.session_id
-    # graph_str = request.data.graph_str.decode('utf-8')
-    room_configuration = request.data.config
+    data = request.get_json()  # Parse the JSON data from the request
+    session_id = data['session_id']
+    room_configuration = data['config']
         
     run_model_img(combination_selector(room_configuration), session_id)
     
